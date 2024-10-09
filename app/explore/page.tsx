@@ -1,5 +1,7 @@
 "use client"
 
+import Link from "next/link"
+
 import React, { useState, useEffect } from "react"
 
 import { useAccount, useReadContract } from "wagmi"
@@ -49,7 +51,12 @@ const Explore = () => {
       <h1 className="text-3xl font-bold">Explore</h1>
       <div className="flex gap-2 w-40">
         {otherListedNFTs.map((nft) => (
-          <NFTCard key={nft.tokenId} nft={nft} />
+          <div>
+            <NFTCard key={nft.tokenId} nft={nft} />
+            <button className="bg-slate-500">
+              <Link href={`/token/${nft.tokenId}`}>Buy this NFT</Link>
+            </button>
+          </div>
         ))}
       </div>
 
