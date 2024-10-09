@@ -19,7 +19,7 @@ export const getConfig = () => {
     appName: "CRFTD",
     projectId: projectId,
     multiInjectedProviderDiscovery: false,
-    chains: [base, baseSepolia],
+    chains: [baseSepolia],
     wallets: [
       {
         groupName: "Recommended Wallet",
@@ -35,7 +35,7 @@ export const getConfig = () => {
       storage: cookieStorage,
     }),
     transports: {
-      [base.id]: http(),
+      // [base.id]: http(),
       [baseSepolia.id]: http(),
     },
   })

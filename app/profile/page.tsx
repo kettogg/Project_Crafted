@@ -75,6 +75,7 @@ const Profile = () => {
     error: listError,
     isPending: listPending,
     writeContractAsync: listWriteContractAsync,
+    reset: listReset,
   } = useWriteContract()
   const { isLoading: listConfirming, isSuccess: listConfirmed } =
     useWaitForTransactionReceipt({ hash: listHash })
@@ -85,6 +86,7 @@ const Profile = () => {
     error: unlistError,
     isPending: unlistPending,
     writeContractAsync: unlistWriteContractAsync,
+    reset: unlistReset,
   } = useWriteContract()
   const { isLoading: unlistConfirming, isSuccess: unlistConfirmed } =
     useWaitForTransactionReceipt({ hash: unlistHash })
@@ -130,14 +132,14 @@ const Profile = () => {
   // OPEN List Dialog
   const openListDialog = (tokenId: bigint) => {
     setSelectedTokenId(tokenId)
-
+    listReset()
     if (listDialogRef.current) listDialogRef.current.showModal()
   }
 
   // OPEN Unlist Dialog
   const openUnlistDialog = (tokenId: bigint) => {
     setSelectedTokenId(tokenId)
-
+    unlistReset()
     if (unlistDialogRef.current) unlistDialogRef.current.showModal()
   }
 

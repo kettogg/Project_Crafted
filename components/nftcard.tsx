@@ -47,11 +47,8 @@ const NFTCard = ({
           const jsonMetaData = await res.json()
 
           // Check and update the fileURL if imgUrl exists and starts with ipfs://
-          if (
-            jsonMetaData.imgUrl &&
-            jsonMetaData.imgUrl.startsWith("ipfs://")
-          ) {
-            const ipfsHash = jsonMetaData.imgUrl.split("ipfs://")[1]
+          if (jsonMetaData.image && jsonMetaData.image.startsWith("ipfs://")) {
+            const ipfsHash = jsonMetaData.image.split("ipfs://")[1]
             const pubURL = `https://${gatewayURL}/ipfs/${ipfsHash}`
 
             // Set the file URL state
