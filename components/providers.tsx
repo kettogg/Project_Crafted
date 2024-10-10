@@ -6,12 +6,31 @@ import { type ReactNode, useState } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 import { cookieToInitialState, type State, WagmiProvider } from "wagmi"
-import { baseSepolia } from "wagmi/chains"
+import { base, baseSepolia } from "wagmi/chains"
 
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit"
+import merge from "lodash.merge"
+
+import {
+  Theme,
+  midnightTheme,
+  RainbowKitProvider,
+} from "@rainbow-me/rainbowkit"
 import { OnchainKitProvider } from "@coinbase/onchainkit"
 
 import { getConfig } from "@/configs/wagmi"
+
+const myTheme = merge(midnightTheme(), {
+  radii: {
+    actionButton: "999px",
+    connectButton: "0.2rem",
+    menuButton: "0.05rem",
+    modal: "0.05rem",
+    modalMobile: "0.05rem",
+  },
+  fonts: {
+    body: "var(--font-rg-casual)",
+  },
+} as Theme)
 
 export const Providers = ({
   children,
@@ -28,9 +47,11 @@ export const Providers = ({
       <QueryClientProvider client={queryClient}>
         <OnchainKitProvider
           apiKey={process.env.PUBLIC_ONCHAINKIT_API_KEY}
-          chain={baseSepolia}
+          chain={base}
         >
-          <RainbowKitProvider>{children}</RainbowKitProvider>
+          <RainbowKitProvider modalSize="compact" theme={myTheme}>
+            {children}
+          </RainbowKitProvider>
         </OnchainKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

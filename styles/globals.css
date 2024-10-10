@@ -3,11 +3,10 @@
 @tailwind utilities;
 
 :root {
-  background: white;
-}
+  --black: 0 0 0;
+  --white: 255 255 255;
+  --muted-link: 144 144 144;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    background: white;
-  }
+  --background: var(--black);
+  --foreground: var(--white);
 }

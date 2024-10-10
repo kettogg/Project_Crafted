@@ -10,11 +10,11 @@ import { ABI, ADDRESS } from "@/contract"
 
 import { MarketItem } from "@/lib/types"
 
+const gatewayURL = process.env.NEXT_PUBLIC_GATEWAY_URL as string
+
 type NFTCardProps = {
   nft: MarketItem
 }
-
-const gatewayURL = process.env.NEXT_PUBLIC_GATEWAY_URL as string
 
 const NFTCard = ({
   nft: {

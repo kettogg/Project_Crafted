@@ -1,10 +1,12 @@
 "use client"
 
+import Hero from "@/components/hero"
+
 const Home = () => {
   return (
-    <>
-      <div className="bg-red-400">Home</div>
-    </>
+    <main className="pt-[4.5rem]">
+      <Hero />
+    </main>
   )
 }
 

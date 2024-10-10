@@ -133,7 +133,7 @@ const Mint = () => {
   }
 
   return (
-    <div>
+    <div className="pt-20 text-foreground bg-background">
       <h1 className="text-3xl font-bold">Create New NFT</h1>
       <div className="flex flex-col">
         <div>
@@ -153,6 +153,7 @@ const Mint = () => {
         <div>
           Name
           <input
+            className="text-foreground bg-background"
             id="nftName"
             type="text"
             onChange={(e) =>
@@ -163,6 +164,7 @@ const Mint = () => {
         <div>
           Description
           <textarea
+            className="text-foreground bg-background"
             id="nftDescription"
             onChange={(e) =>
               updateInputParams({ ...inputParams, description: e.target.value })
@@ -172,6 +174,7 @@ const Mint = () => {
         <div>
           Price
           <input
+            className="text-foreground bg-background"
             id="nftPrice"
             type="text"
             onChange={(e) =>
@@ -182,6 +185,7 @@ const Mint = () => {
         <div>
           Royalty
           <input
+            className="text-foreground bg-background"
             id="nftRoyalty"
             type="number"
             onChange={(e) =>

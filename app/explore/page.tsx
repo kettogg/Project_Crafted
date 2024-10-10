@@ -54,7 +54,7 @@ const Explore = () => {
           <div>
             <NFTCard key={nft.tokenId} nft={nft} />
             <button className="bg-slate-500">
-              <Link href={`/token/${nft.tokenId}`}>Buy this NFT</Link>
+              <Link href={`/assets/ethereum/${nft.tokenId}`}>Buy this NFT</Link>
             </button>
           </div>
         ))}
