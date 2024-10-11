@@ -198,7 +198,8 @@ const Profile = () => {
   }
 
   return (
-    <div>
+    <div className="relative flex flex-col w-full mx-auto px-4 pt-[4.5rem] scr-1360:max-w-[1360px] scr-1360:mx-auto scr-1360:px-4 scr-1560:px-0">
+      <section></section>
       <h1 className="text-xl font-bold">Profile Page</h1>
       <div>Account address: {accountAddress} </div>
       Status: {accountStatus}
@@ -217,7 +218,7 @@ const Profile = () => {
       <h2 className="text-xl font-semibold">Owned NFTs</h2>
       <h1 className="text-2xl font-medium">Unlisted NFTs</h1>
       <div className="flex gap-2 ">
-        {unlistedNFTs?.map((nft) => {
+        {/* {unlistedNFTs?.map((nft) => {
           return (
             <div>
               <NFTCard key={nft.tokenId} nft={nft} />
@@ -229,7 +230,7 @@ const Profile = () => {
               </button>
             </div>
           )
-        })}
+        })} */}
       </div>
       {/* List Dialog */}
       <ListDialog
@@ -246,7 +247,7 @@ const Profile = () => {
       />
       <h1 className="text-2xl font-medium">Listed NFTs</h1>
       <div className="flex gap-2 ">
-        {listedNFTs?.map((nft) => {
+        {/* {listedNFTs?.map((nft) => {
           return (
             <div>
               <NFTCard key={nft.tokenId} nft={nft} />
@@ -258,7 +259,7 @@ const Profile = () => {
               </button>
             </div>
           )
-        })}
+        })} */}
       </div>
       <UnlistDialog
         dialogRef={unlistDialogRef}
