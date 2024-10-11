@@ -51,7 +51,7 @@ const Navbar = () => {
       }}
       animate={hidden ? "hidden" : "visible"}
       transition={{ type: "tween", duration: 0.32 }}
-      className="fixed top-0 left-0 w-full h-[4.5rem] py-3 font-mono z-10 bg-black/75 backdrop-blur-md"
+      className="fixed top-0 left-0 w-full h-[4.5rem] py-3 font-mono z-10 bg-black/50 backdrop-blur-md"
     >
       <div className="flex items-center gap-32 max-w-[1360px] w-full h-full mx-auto px-4 scr-1560:px-0">
         <Link href="/" className="text-3xl tracking-tight font-medium">

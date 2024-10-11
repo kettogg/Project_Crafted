@@ -4,9 +4,13 @@
 
 :root {
   --black: 0 0 0;
+  --black-muted: 36 36 36;
   --white: 255 255 255;
-  --muted-link: 144 144 144;
+  --muted: 192 192 192;
+  --muted-alt: 144 144 144;
 
   --background: var(--black);
   --foreground: var(--white);
+  --muted-foreground: var(--muted);
+  --muted-link: var(--muted-alt);
 }

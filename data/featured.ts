@@ -3,5 +3,5 @@ export const featuredTokenIds: bigint[] = [
   BigInt(9),
   BigInt(14),
   BigInt(1),
-  BigInt(13),
+  BigInt(15),
 ]
