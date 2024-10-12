@@ -47,9 +47,9 @@ const Explore = () => {
   }, [listedNFTsData, accountAddress])
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 pt-[4.5rem]">
       <h1 className="text-3xl font-bold">Explore</h1>
-      <div className="flex gap-2 w-40">
+      <div className="flex flex-col gap-2 w-40">
         {otherListedNFTs.map((nft) => (
           <div>
             <NFTCard key={nft.tokenId} nft={nft} />
@@ -66,7 +66,7 @@ const Explore = () => {
           <h3 className="text-xl font-medium">
             Please go to the profile page to change this
           </h3>
-          <div className="flex w-40 gap-2">
+          <div className="flex flex-col w-40 gap-2">
             {userListedNFTs.map((nft) => (
               <NFTCard key={nft.tokenId} nft={nft} />
             ))}

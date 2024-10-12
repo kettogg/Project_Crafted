@@ -109,7 +109,7 @@ export default function IdentityWrapper() {
           </div>
           {ensText && (
             <motion.div
-              className="rounded-lg bg-white bg-opacity-20 p-4 text-white shadow-md"
+              className="rounded-radii-lg bg-white bg-opacity-20 p-4 text-white shadow-md"
               initial={{ height: 0, opacity: 0 }} // Initial state
               animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }} // Animated state
               transition={{ duration: 0.5, ease: "easeInOut" }} // Animation duration and easing

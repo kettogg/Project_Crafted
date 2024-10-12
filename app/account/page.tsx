@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, Suspense } from "react"
 
 import {
   useAccount,
@@ -8,16 +8,29 @@ import {
   useWriteContract,
   useWaitForTransactionReceipt,
 } from "wagmi"
+import { base, baseSepolia } from "wagmi/chains"
 
 import { parseEther } from "viem"
 
+import {
+  Identity,
+  Avatar,
+  Name,
+  Address,
+  EthBalance,
+  Badge,
+} from "@coinbase/onchainkit/identity"
+
 import { ABI, ADDRESS } from "@/contract"
 
+import WalletWrapper from "@/components/wallet"
 import NFTCard from "@/components/nftcard"
 import ListDialog from "@/components/listdialog"
 import UnlistDialog from "@/components/unlistdialog"
+import { Skeleton } from "@/components/skeleton"
 
 import { MarketItem } from "@/lib/types"
+import Gallery from "@/components/gallery"
 
 const Profile = () => {
   const [tokenCount, setTokenCount] = useState<bigint | null>(null)
@@ -27,6 +40,10 @@ const Profile = () => {
   const [listedNFTs, setListedNFTs] = useState<MarketItem[]>([])
   const [unlistedNFTs, setUnlistedNFTs] = useState<MarketItem[]>([])
 
+  const [activeView, setActiveView] = useState<"owned" | "listed" | "unlisted">(
+    "owned"
+  )
+
   const [selectedTokenId, setSelectedTokenId] = useState<bigint | null>(null)
   const [selectedListingPrice, setSelectedListingPrice] = useState<string>("")
 
@@ -35,7 +52,7 @@ const Profile = () => {
 
   const {
     address: accountAddress,
-    chainId,
+    chainId: accountChainId,
     status: accountStatus,
   } = useAccount()
 
@@ -96,6 +113,7 @@ const Profile = () => {
     data: ownedNFTsData,
     status: ownedNFTsDataStatus,
     refetch: refetchOwnedNFTs,
+    error: ownedNFTsError,
   } = useReadContract({
     abi: ABI,
     address: ADDRESS,
@@ -190,87 +208,167 @@ const Profile = () => {
   }
 
   if (accountStatus === "disconnected") {
-    return <div>Please connect your wallet</div>
+    return (
+      <div className="w-full flex flex-col gap-4 items-center justify-center pt-60 px-10 font-mono">
+        <h1 className="text-base tracking-tighter text-foreground-muted font-light text-center">
+          {`Please connect your wallet to access your profile :)`}
+        </h1>
+        <WalletWrapper
+          className="rounded-radii-sm px-[0.85rem] py-[0.4rem] transition-colors duration-200"
+          text="Connect Wallet"
+          withWalletAggregator={true}
+        />
+      </div>
+    )
   }
 
   if (accountStatus === "connecting") {
-    return <div>Connecting ...</div>
+    return (
+      <div className="w-full flex flex-col gap-4 items-center justify-center pt-60 px-10 font-mono">
+        <h1 className="text-base tracking-tighter text-foreground-muted font-light text-center">
+          {`Connecting...`}
+        </h1>
+      </div>
+    )
   }
 
   return (
     <div className="relative flex flex-col w-full mx-auto px-4 pt-[4.5rem] scr-1360:max-w-[1360px] scr-1360:mx-auto scr-1360:px-4 scr-1560:px-0">
-      <section></section>
-      <h1 className="text-xl font-bold">Profile Page</h1>
-      <div>Account address: {accountAddress} </div>
-      Status: {accountStatus}
-      <br />
-      Chain Id: {chainId}
-      <h2 className="text-lg font-semibold">Contract and Marketplace info</h2>
-      <div>
-        Contract Address: {ADDRESS}
-        <br />
-        Token Count:{" "}
-        {tokenCountStatus === "pending" ? "..." : tokenCount?.toString()}
-        <br />
-        Market Fee Percent:{" "}
-        {marketFeeStatus === "pending" ? "... %" : marketFee?.toString()}
-      </div>
-      <h2 className="text-xl font-semibold">Owned NFTs</h2>
-      <h1 className="text-2xl font-medium">Unlisted NFTs</h1>
-      <div className="flex gap-2 ">
-        {/* {unlistedNFTs?.map((nft) => {
-          return (
-            <div>
-              <NFTCard key={nft.tokenId} nft={nft} />
-              <button
-                onClick={() => openListDialog(nft.tokenId)}
-                className="bg-green-400"
-              >
-                List this NFT
-              </button>
-            </div>
-          )
-        })} */}
-      </div>
-      {/* List Dialog */}
-      <ListDialog
-        dialogRef={listDialogRef}
-        listingPrice={selectedListingPrice}
-        setListingPrice={setSelectedListingPrice}
-        listNFT={listNFT}
-        listPending={listPending}
-        listConfirming={listConfirming}
-        listConfirmed={listConfirmed}
-        listHash={listHash}
-        listError={listError}
-        closeDialog={closeDialog}
-      />
-      <h1 className="text-2xl font-medium">Listed NFTs</h1>
-      <div className="flex gap-2 ">
-        {/* {listedNFTs?.map((nft) => {
-          return (
-            <div>
-              <NFTCard key={nft.tokenId} nft={nft} />
-              <button
-                onClick={() => openUnlistDialog(nft.tokenId)}
-                className="bg-yellow-300"
-              >
-                Unlist this NFT
-              </button>
-            </div>
-          )
-        })} */}
-      </div>
-      <UnlistDialog
-        dialogRef={unlistDialogRef}
-        unlistNFT={unlistNFT}
-        unlistPending={unlistPending}
-        unlistConfirming={unlistConfirming}
-        unlistConfirmed={unlistConfirmed}
-        unlistHash={unlistHash}
-        unlistError={unlistError}
-        closeDialog={closeDialog}
-      />
+      <section className="flex flex-col justify-center pt-[134px] gap-2 font-mono text-base">
+        <div className="absolute top-[4.5rem] left-0 bg-elevation w-full h-48 -z-10"></div>
+        <Avatar
+          loadingComponent={
+            <Skeleton className="w-28 h-28 rounded-full bg-foreground-muted-dark/15" />
+          }
+          defaultComponent={
+            <svg
+              data-testid="ock-defaultAvatarSVG"
+              role="img"
+              aria-label="ock-defaultAvatarSVG"
+              width="100%"
+              height="100%"
+              viewBox="0 0 40 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-full w-full bg-foreground fill-background rounded-full"
+            >
+              <path d="M20 40C8.9543 40 0 31.0457 0 20C0 8.9543 8.9543 0 20 0C31.0457 0 40 8.9543 40 20C40 31.0457 31.0457 40 20 40ZM25.6641 13.9974C25.6641 10.8692 23.1282 8.33333 20.0001 8.33333C16.8719 8.33333 14.336 10.8692 14.336 13.9974C14.336 17.1256 16.8719 19.6615 20.0001 19.6615C23.1282 19.6615 25.6641 17.1256 25.6641 13.9974ZM11.3453 23.362L9.53476 28.1875C12.2141 30.8475 15.9019 32.493 19.974 32.5H20.026C24.0981 32.493 27.7859 30.8475 30.4653 28.1874L28.6547 23.362C28.0052 21.625 26.3589 20.4771 24.5162 20.4318C24.4557 20.4771 22.462 21.9271 20 21.9271C17.538 21.9271 15.5443 20.4771 15.4839 20.4318C13.6412 20.462 11.9948 21.625 11.3453 23.362Z"></path>
+            </svg>
+          }
+          style={{
+            filter: "drop-shadow(rgba(0, 0, 0, 0.25) 0px 10px 20px)",
+          }}
+          className="w-28 h-28 border border-foreground/50"
+          address={accountAddress}
+          chain={base}
+        />
+
+        <Identity
+          address={accountAddress}
+          className="bg-background hover:bg-transparent active:bg-transparent py-0 px-0 break-all"
+          chain={baseSepolia}
+        >
+          <Name
+            address={accountAddress}
+            chain={base}
+            className="text-3xl text-foreground mt-2 min-h-9"
+          />
+          <Badge />
+        </Identity>
+
+        <Identity
+          address={accountAddress}
+          className="bg-background hover:bg-transparent active:bg-transparent py-0 px-0 max-w-64 break-all"
+          hasCopyAddressOnClick={true}
+          chain={baseSepolia}
+        >
+          <Address className="text-foreground-muted-dark text-base font-mono" />
+          <EthBalance className="text-foreground-muted-dark text-base font-mono" />
+        </Identity>
+      </section>
+      <section className="flex flex-col justify-center py-4 font-sans text-base tracking-tight text-foreground border-b border-white/5">
+        <nav className="flex flex-wrap gap-3">
+          <button
+            onClick={() => setActiveView("owned")}
+            className={`px-4 py-2 rounded-radii-lg ${activeView === "owned" ? "bg-white/5 text-foreground" : "text-foreground-muted-dark"}`}
+          >
+            <span className="hover:text-foreground transition-colors">
+              Owned
+            </span>
+            <span className="text-foreground-muted ml-2 font-mono">
+              {ownedNFTs?.length}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setActiveView("listed")}
+            className={`px-3 rounded-radii-lg ${activeView === "listed" ? "bg-white/5 text-foreground" : "text-foreground-muted-dark"}`}
+          >
+            <span className="hover:text-foreground transition-colors">
+              Listed
+            </span>
+            <span className="text-foreground-muted ml-2 font-mono">
+              {listedNFTs?.length}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setActiveView("unlisted")}
+            className={`px-3 rounded-radii-lg ${activeView === "unlisted" ? "bg-white/5 text-foreground" : "text-foreground-muted-dark"}`}
+          >
+            <span className="hover:text-foreground transition-colors">
+              Unlisted
+            </span>
+            <span className="text-foreground-muted ml-2 font-mono">
+              {unlistedNFTs?.length}
+            </span>
+          </button>
+          {/* TODO - Add a function in contract to get all the created NFTs */}
+          {/* <button className="px-3 rounded-radii-lg text-foreground-muted-dark">
+            <span>Created</span>
+            <span className="text-foreground-muted ml-2">
+              {getCreatedNfts}
+            </span>
+          </button> */}
+        </nav>
+      </section>
+      <section className="flex flex-col justify-center mt-4 gap-2 font-mono text-base">
+        <div className="flex flex-col gap-2 ">
+          {activeView === "owned" && ownedNFTs && (
+            <Gallery itemsList={ownedNFTs} />
+          )}
+          {activeView === "listed" && listedNFTs && (
+            <Gallery itemsList={listedNFTs} />
+          )}
+          {activeView === "unlisted" && unlistedNFTs && (
+            <Gallery itemsList={unlistedNFTs} />
+          )}
+
+          <ListDialog
+            dialogRef={listDialogRef}
+            listingPrice={selectedListingPrice}
+            setListingPrice={setSelectedListingPrice}
+            listNFT={listNFT}
+            listPending={listPending}
+            listConfirming={listConfirming}
+            listConfirmed={listConfirmed}
+            listHash={listHash}
+            listError={listError}
+            closeDialog={closeDialog}
+          />
+          <UnlistDialog
+            dialogRef={unlistDialogRef}
+            unlistNFT={unlistNFT}
+            unlistPending={unlistPending}
+            unlistConfirming={unlistConfirming}
+            unlistConfirmed={unlistConfirmed}
+            unlistHash={unlistHash}
+            unlistError={unlistError}
+            closeDialog={closeDialog}
+          />
+        </div>
+      </section>
+      <section className="h-[100vh]"></section>
     </div>
   )
 }

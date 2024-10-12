@@ -1,18 +1,36 @@
 "use client"
 
+import Image from "next/image"
+import Link from "next/link"
+
 import React, { useState, useEffect } from "react"
 
-import { useReadContract } from "wagmi"
+import { motion } from "framer-motion"
+
+import { useAccount, useReadContract } from "wagmi"
+import { base, baseSepolia } from "wagmi/chains"
 
 import { formatEther } from "viem"
+
+import {
+  Identity,
+  Avatar,
+  Name,
+  Address,
+  EthBalance,
+  Badge,
+} from "@coinbase/onchainkit/identity"
+
+import { Skeleton } from "@/components/skeleton"
 
 import { ABI, ADDRESS } from "@/contract"
 
 import { MarketItem } from "@/lib/types"
+import { dialog, div } from "framer-motion/client"
 
 const gatewayURL = process.env.NEXT_PUBLIC_GATEWAY_URL as string
 
-type NFTCardProps = {
+export type NFTCardProps = {
   nft: MarketItem
 }
 
@@ -27,8 +45,15 @@ const NFTCard = ({
   },
 }: NFTCardProps) => {
   const [fileURL, setFileURL] = useState<string>("")
+  const [nftName, setNftName] = useState<string>("")
 
   const [isListed, setIsListed] = useState<boolean>(initialIsListed)
+
+  const [isHovered, setIsHovered] = useState(false)
+
+  const [isMoreOpen, setIsMoreOpen] = useState(false)
+
+  const { address: accountAddress } = useAccount()
 
   // READ - Get token URI and use it to get the file URL (image/gif/audio)
   const { data: tokenURIData, status: tokenURIStatus } = useReadContract({
@@ -57,6 +82,11 @@ const NFTCard = ({
           } else {
             console.log("imgUrl not found or does not start with ipfs://")
           }
+
+          if (jsonMetaData.name) {
+            const nftName = jsonMetaData.name
+            setNftName(nftName)
+          }
         } catch (error) {
           console.error("Error fetching file URI:", error)
         }
@@ -66,19 +96,204 @@ const NFTCard = ({
     getFileURL()
   }, [tokenURIData, tokenURIStatus])
 
+  const handleMoreBtn = () => {
+    setIsMoreOpen((prev) => !prev)
+  }
+
   return (
-    <div className="w-48 break-words gap-28">
-      Token ID: {tokenId.toString()}
-      <br />
-      Creator: {creator}
-      <br />
-      Owner: {currentOwner}
-      <br />
-      Royalty: {royaltyFeePercent}
-      <br />
-      {isListed && <div>Listing Price - {formatEther(price)}</div>}
-      <img src={fileURL} alt="" />
-    </div>
+    <article className="group relative flex flex-col rounded-radii-lg bg-elevation hover:bg-elevation-high card-shadow z-[2] overflow-hidden">
+      <div className="relative cursor-pointer flex flex-col h-full">
+        <div className="pb-[100%] relative overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="relative flex flex-col h-full justify-center group-hover:scale-110 transition-transform duration-[400ms]">
+              {fileURL ? (
+                <Image
+                  alt={`Item#${tokenId}`}
+                  src={fileURL}
+                  fill={true}
+                  className="object-cover"
+                />
+              ) : (
+                <Skeleton className="absolute top-0 left-0 flex flex-col w-full h-full" />
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="grow relative flex flex-col justify-between p-4 font-sans text-foreground tracking-tight">
+          <div className="flex flex-col">
+            <div className="flex justify-between">
+              {nftName ? (
+                <span className="text-sm lg:text-base">{`${nftName}`}</span>
+              ) : (
+                <Skeleton className="w-full h-5 lg:h-6 rounded-radii-skeleton" />
+              )}
+              {tokenId ? (
+                <span className="text-sm lg:text-base font-mono ml-2">{`#${tokenId}`}</span>
+              ) : (
+                <Skeleton className="w-full h-5 lg:h-6 rounded-radii-skeleton" />
+              )}
+            </div>
+
+            <div className="flex">
+              <span className="text-sm lg:text-[0.9375rem] leading-5 text-foreground-muted-dark">
+                By
+              </span>
+              {creator ? (
+                <Identity
+                  address={creator}
+                  className="bg-transparent py-0 px-0 break-all ml-1"
+                  chain={baseSepolia}
+                >
+                  <Name
+                    address={creator}
+                    chain={base}
+                    className="text-sm lg:text-[0.9375rem] leading-5 font-normal text-foreground-muted min-h-6"
+                  />
+                  <Badge />
+                </Identity>
+              ) : (
+                <Skeleton className="w-[80%] h-6 rounded-radii-skeleton" />
+              )}
+            </div>
+
+            <div className="min-h-6">
+              {isListed && (
+                <div className="flex items-center font-mono text-foreground">
+                  {price ? (
+                    <span className="text-sm lg:text-[0.9375rem]">
+                      {formatEther(price)}
+                    </span>
+                  ) : (
+                    <Skeleton className="min-w-16 h-6 rounded-radii-skeleton" />
+                  )}
+
+                  <span className="text-sm lg:text-[0.9375rem] text-foreground-muted ml-2">
+                    ETH
+                  </span>
+                  <span className="ml-1">
+                    <svg
+                      className="fill-foreground-muted-dark"
+                      width="14px"
+                      height="14px"
+                      viewBox="0 0 24 24"
+                      role="img"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title>Ethereum Icon</title>
+                      <path d="M11.944 17.97L4.58 13.62 11.943 24l7.37-10.38-7.372 4.35h.003zM12.056 0L4.69 12.223l7.365 4.354 7.365-4.35L12.056 0z" />
+                    </svg>
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {isListed && (
+            <div className="hidden lg:flex mt-3">
+              <span className="text-[0.9375rem] leading-[0.9375rem] text-foreground-muted-dark">
+                Listed by
+              </span>
+              {currentOwner ? (
+                <Identity
+                  address={currentOwner}
+                  className="bg-transparent py-0 px-0 break-all ml-1"
+                  chain={baseSepolia}
+                >
+                  <Name
+                    address={currentOwner}
+                    chain={base}
+                    className="text-[0.9375rem] leading-[0.9375rem] text-foreground-muted-dark"
+                  />
+                  <Badge />
+                </Identity>
+              ) : (
+                <Skeleton className="w-full h-6 rounded-radii-skeleton" />
+              )}
+            </div>
+          )}
+
+          <div className="lg:hidden absolute bottom-0 left-0 w-full mt-2">
+            <button
+              onClick={handleMoreBtn}
+              className="flex items-center justify-end w-full h-full px-3 py-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 -960 960 960"
+                width="24px"
+                className="fill-foreground-muted-dark hover:fill-foreground"
+              >
+                <path d="M240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400Z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={`hidden lg:flex absolute ${isMoreOpen ? "bottom-0" : "-bottom-10"} group-hover:bottom-0 transition-all justify-center items-center bg-blue w-full h-9 font-sans`}
+      >
+        <button className="grow flex items-center justify-center text-foreground text-sm tracking-tight font-semibold text-center hover:bg-blue-hover h-full">
+          {isListed
+            ? accountAddress !== currentOwner
+              ? "Buy NFT"
+              : "Unlist from sale"
+            : accountAddress === currentOwner
+              ? "List for sale"
+              : "View NFT"}
+        </button>
+        <button
+          onClick={handleMoreBtn}
+          className="shrink-0 flex items-center justify-center px-3 border-l border-white/60 hover:bg-blue-hover h-full"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 -960 960 960"
+            width="24px"
+            className="fill-white"
+          >
+            <path d="M240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400Z" />
+          </svg>
+        </button>
+      </div>
+
+      {isMoreOpen && (
+        <motion.div
+          initial={{
+            boxShadow: "rgba(0, 0, 0, 0) 0px 6px 32px",
+            opacity: 0,
+          }}
+          animate={{
+            boxShadow: "rgba(0, 0, 0, 0.2) 0px 6px 32px",
+            opacity: 1,
+          }}
+          exit={{
+            boxShadow: "rgba(0, 0, 0, 0) 0px 6px 32px",
+            opacity: 0,
+          }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
+          className="absolute flex flex-col items-start rounded-radii-lg bottom-12 right-0 bg-elevation-higher text-foreground font-sans text-sm lg:text-[0.9375rem] p-2 z-50"
+        >
+          <button className="p-2 lg:px-4 lg:py-3 hover:bg-white/5 rounded-radii-lg w-full">
+            {isListed
+              ? accountAddress !== currentOwner
+                ? "Buy NFT"
+                : "Unlist from sale"
+              : accountAddress === currentOwner
+                ? "List for sale"
+                : "View NFT"}
+          </button>
+          <div className="relative w-full my-2">
+            <div className="absolute left-0 right-0 border-t border-white/10 -mx-2"></div>
+          </div>
+          <button className="p-2 lg:px-4 lg:py-3 hover:bg-white/5 rounded-radii-lg text-sm lg:text-[0.9375rem] w-full">
+            Copy Link
+          </button>
+        </motion.div>
+      )}
+    </article>
   )
 }
 

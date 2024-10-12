@@ -4,17 +4,60 @@
 
 :root {
   --black: 0 0 0;
-  --black-muted: 36 36 36;
-  --black-light: 48 48 48;
+  --gray: 176 176 176;
+  --gray-dark: 144 144 144;
   --white: 255 255 255;
-  --muted: 192 192 192;
-  --muted-alt: 144 144 144;
+  --blue: 32 130 226;
+  --blue-hover: 46 140 238;
 
-  --background: var(--black);
+  --base-main: 16 16 16;
+  --base-alt: 18 18 18;
+  --elevation: 32 32 32;
+  --elevation-high: 36 36 36;
+  --elevation-higher: 46 46 46;
+
+  --background: var(--base-main);
   --foreground: var(--white);
-  --muted-foreground: var(--muted);
-  --muted-link: var(--muted-alt);
-  --scrollbar-bg: var(--black-light);
+  --foreground-muted: var(--gray);
+  --foreground-muted-dark: var(--gray-dark);
+
+  --radii-sm: 0.2rem;
+  --radii-lg: 0.625rem;
+  --radii-skeleton: 0.05rem;
+
+  --overlay: 16, 16, 16;
+  --scrollbar-bg: var(--elevation-higher);
+}
+
+.backdrop-overlay {
+  background: linear-gradient(
+      rgba(var(--overlay), 0) 50%,
+      rgb(var(--overlay)) 90.22%
+    ),
+    linear-gradient(0deg, rgba(var(--overlay), 0.2), rgba(var(--overlay), 0.2));
+}
+
+.feat-card-overlay {
+  background: linear-gradient(
+    rgba(var(--overlay), 0) 0%,
+    rgba(var(--overlay), 0.6) 100%
+  );
+}
+
+.avatar-drop-shadow {
+  filter: drop-shadow(2px 6px 10px rgba(var(--overlay), 0.25));
+}
+
+.card-shadow {
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 16px;
+}
+
+.card-shadow:hover {
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 24px;
+}
+
+.modal-shadow {
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 6px 32px;
 }
 
 ::-moz-selection {

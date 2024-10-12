@@ -22,6 +22,10 @@ import Navbar from "@/components/navbar"
 //   weight: ["300", "400", "500", "600", "700"],
 // })
 
+const rightGroteskCasualText = localFont({
+  src: "../assets/fonts/PPRightGroteskText-CasualVariable.ttf",
+  variable: "--font-rg-casual-text",
+})
 const rightGroteskCasual = localFont({
   src: "../assets/fonts/PPRightGrotesk-CasualVariable.ttf",
   variable: "--font-rg-casual",
@@ -49,7 +53,7 @@ export default function RootLayout(props: { children: ReactNode }) {
   return (
     <html lang="en" className="">
       <body
-        className={`${rightGroteskCasual.variable} ${rightGroteskMono.variable} ${rightGroteskWide.variable} ${rightGroteskTight.variable} bg-background text-foreground`}
+        className={`${rightGroteskCasualText.variable} ${rightGroteskCasual.variable} ${rightGroteskMono.variable} ${rightGroteskWide.variable} ${rightGroteskTight.variable} min-w-48 bg-background text-foreground`}
       >
         <Providers cookie={cookie}>
           <Navbar />

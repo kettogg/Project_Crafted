@@ -48,7 +48,7 @@ const Hero = () => {
           {nftName ? (
             nftName
           ) : (
-            <Skeleton className="w-[480px] h-7 rounded-[0.05rem]" />
+            <Skeleton className="w-[480px] h-7 rounded-radii-skeleton" />
           )}
         </h3>
         <h4 className="text-base leading-5 h-5 font-sans mt-2">
@@ -56,17 +56,17 @@ const Hero = () => {
             <Name
               address={nftItem.creator}
               chain={base}
-              className="text-m text-white"
+              className="text-foreground"
             />
           ) : (
-            <Skeleton className="w-[140px] h-full rounded-[0.05rem] mt-2" />
+            <Skeleton className="w-[140px] h-full rounded-radii-skeleton mt-2" />
           )}
         </h4>
 
         <div className="flex justify-between md:justify-start mt-6">
           <div className="flex">
             <div className="flex flex-col w-2/5 md:w-[8.5rem] ">
-              <span className="text-muted-foreground text-xs font-mono font-semibold">
+              <span className="text-foreground-muted text-xs font-mono font-semibold">
                 FLOOR PRICE
               </span>
               <div className="flex items-center">
@@ -75,12 +75,14 @@ const Hero = () => {
                     {`${formatEther(nftItem.price)}`}
                   </span>
                 ) : (
-                  <span className="text-muted-link text-sm font-mono">...</span>
+                  <span className="text-foreground-muted text-sm font-mono">
+                    ...
+                  </span>
                 )}
 
                 <span className="ml-1">
                   <svg
-                    className="fill-muted-foreground"
+                    className="fill-foreground-muted"
                     width="14px"
                     height="14px"
                     viewBox="0 0 24 24"
@@ -95,8 +97,8 @@ const Hero = () => {
             </div>
           </div>
 
-          <button className="bg-black-40 backdrop-blur-md flex items-center border border-white/15 rounded-[0.2rem] text-sm font-mono font-medium px-3 py-2 group hover:bg-foreground hover:text-background transition-colors duration-200">
-            <span>View</span>
+          <button className="bg-black/40 backdrop-blur-md border border-white/10 flex items-center rounded-radii-sm text-sm font-sans font-medium px-3 py-2 group hover:bg-foreground hover:text-black transition-colors duration-200">
+            <span>VIEW</span>
             <span className="hidden md:inline md:ml-[0.35rem]">NFT</span>
             <svg
               className="fill-foreground group-hover:fill-background transition-colors duration-200 ml-1"
@@ -130,7 +132,7 @@ const Hero = () => {
                           : 0,
                     transition: { duration: 0.3 },
                   }}
-                  className="relative flex flex-col border border-white/10 w-40 min-w-40 md:w-[19%] md:min-w-[19%] h-[6.75rem] md:h-[8.5rem] scr-1360:h-40 rounded-[0.2rem] cursor-pointer"
+                  className="relative flex flex-col w-40 min-w-40 md:w-[19%] md:min-w-[19%] h-[6.75rem] md:h-[8.5rem] scr-1360:h-40 rounded-radii-sm cursor-pointer"
                   onMouseEnter={() => handleCardHover(tokenId)}
                   onMouseLeave={handleCardHoverEnd}
                 >

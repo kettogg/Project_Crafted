@@ -71,12 +71,12 @@ const Navbar = () => {
       }}
       animate={hidden ? "hidden" : "visible"}
       transition={{ type: "tween", duration: 0.32 }}
-      className="fixed top-0 left-0 w-full h-[4.5rem] py-3 font-mono z-20 bg-black/50 backdrop-blur-md"
+      className={`fixed top-0 left-0 w-full h-[4.5rem] py-3 font-mono z-20 ${path === "/" ? "bg-base-alt/60 backdrop-blur-md" : "bg-base-alt"}`}
     >
-      <div className="relative flex justify-between items-center gap-32 max-w-[1360px] z-20 w-full h-full mx-auto px-4 scr-1560:px-0">
+      <div className="relative flex justify-between items-center scr-20:gap-32 max-w-[1360px] z-20 w-full h-full mx-auto px-4 scr-1560:px-0">
         <Link
           href="/"
-          className="text-3xl font-mono font-medium tracking-tighter"
+          className="text-[2rem] font-mono font-medium tracking-tighter"
         >
           Crafted
         </Link>
@@ -87,17 +87,17 @@ const Navbar = () => {
               return (
                 <div key={index} className="px-2">
                   <Link
-                    className={`${path === item.route ? "text-foreground" : "text-muted-link"} hover:text-foreground transition-colors duration-200`}
+                    className={`${path === item.route ? "text-foreground" : "text-foreground-muted-dark"} hover:text-foreground transition-colors duration-200`}
                     href={item.route}
                   >
-                    {item.name}
+                    {item.name.toUpperCase()}
                   </Link>
                 </div>
               )
             })}
-            <div className="px-2">
+            <div className="pl-2">
               <WalletWrapper
-                className="rounded-[0.2rem] px-[0.85rem] py-[0.4rem] transition-colors duration-200"
+                className="rounded-radii-sm px-[0.85rem] py-[0.4rem] transition-colors duration-200"
                 text="Connect Wallet"
                 withWalletAggregator={true}
               />
@@ -119,15 +119,22 @@ const Navbar = () => {
         initial="closed"
         animate={menuOpen ? "open" : "closed"}
       >
-        <div className="flex flex-col items-center justify-center h-full text-xl tracking-tight">
+        <div className="flex flex-col items-center justify-center h-full tracking-tight">
+          <div className="px-2 py-3">
+            <WalletWrapper
+              className="rounded-radii-sm px-[0.85rem] py-[0.4rem] transition-colors duration-200"
+              text="Connect Wallet"
+              withWalletAggregator={true}
+            />
+          </div>
           {navItems.map((item, index) => {
             return (
-              <div key={index} className="px-2 py-4">
+              <div key={index} className="px-2 py-3">
                 <Link
-                  className={`${path === item.route ? "text-foreground" : "text-muted-link"} hover:text-foreground transition-colors duration-200`}
+                  className={`${path === item.route ? "text-foreground" : "text-foreground-muted-dark"} hover:text-foreground transition-colors duration-200`}
                   href={item.route}
                 >
-                  {item.name}
+                  {item.name.toUpperCase()}
                 </Link>
               </div>
             )

@@ -12,6 +12,8 @@ import { type BaseError } from "wagmi"
 
 import { parseEther } from "viem"
 
+import WalletWrapper from "@/components/wallet"
+
 import { pinFileToIPFS, pinJSONToIPFS } from "@/actions/pinata"
 
 import { ABI, ADDRESS } from "@/contract"
@@ -125,11 +127,28 @@ const Mint = () => {
   }
 
   if (accountStatus === "disconnected") {
-    return <div>Please connect your wallet</div>
+    return (
+      <div className="w-full flex flex-col gap-4 items-center justify-center pt-60 px-10 font-mono">
+        <h1 className="text-base tracking-tighter text-muted-link font-light text-center">
+          {`Please connect your wallet to access your profile :)`}
+        </h1>
+        <WalletWrapper
+          className="rounded-radii-sm px-[0.85rem] py-[0.4rem] transition-colors duration-200"
+          text="Connect Wallet"
+          withWalletAggregator={true}
+        />
+      </div>
+    )
   }
 
   if (accountStatus === "connecting") {
-    return <div>Connecting ...</div>
+    return (
+      <div className="w-full flex flex-col gap-4 items-center justify-center pt-60 px-10 font-mono">
+        <h1 className="text-base tracking-tighter text-muted-link font-light text-center">
+          {`Connecting...`}
+        </h1>
+      </div>
+    )
   }
 
   return (

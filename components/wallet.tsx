@@ -37,16 +37,18 @@ const WalletWrapper = ({
         withWalletAggregator={withWalletAggregator}
         className={cn("", className)}
       >
-        <ConnectWalletText className="font-medium">{text}</ConnectWalletText>
+        <ConnectWalletText className="font-medium text-foreground">
+          {text}
+        </ConnectWalletText>
         <Avatar className="h-6 w-6" />
         <Name className="font-medium" />
       </ConnectWallet>
-      <WalletDropdown className="rounded-[0.2rem]">
+      <WalletDropdown className="rounded-radii-sm">
         <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick={true}>
           <Avatar />
           <Name />
-          <Address />
-          <EthBalance />
+          <Address className="font-mono" />
+          <EthBalance className="font-mono" />
         </Identity>
         <WalletDropdownBasename />
         <WalletDropdownLink

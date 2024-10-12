@@ -37,13 +37,7 @@ const Backdrop = ({ backdropUrl, className }: BackdropProps) => {
           "absolute left-0 flex flex-col w-full h-full bg-center bg-cover bg-no-repeat"
         )}
       >
-        <div
-          style={{
-            background:
-              "linear-gradient(rgba(8, 4, 4, 0) 50%, rgb(8, 4, 4) 90.22%), linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2))",
-          }}
-          className="absolute top-0 left-0 flex flex-col w-full h-full"
-        ></div>
+        <div className="absolute top-0 left-0 flex flex-col w-full h-full backdrop-overlay"></div>
       </motion.div>
     </motion.div>
   )
