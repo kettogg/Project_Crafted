@@ -1,6 +1,9 @@
 "use client"
 
-import React, { useState } from "react"
+import Image from "next/image"
+import Link from "next/link"
+
+import React, { useState, useRef } from "react"
 
 import {
   useAccount,
@@ -13,12 +16,14 @@ import { type BaseError } from "wagmi"
 import { parseEther } from "viem"
 
 import WalletWrapper from "@/components/wallet"
+import { Skeleton } from "@/components/skeleton"
 
 import { pinFileToIPFS, pinJSONToIPFS } from "@/actions/pinata"
 
 import { ABI, ADDRESS } from "@/contract"
 
 import { cn } from "@/lib/utils"
+import { div, section } from "framer-motion/client"
 
 const Mint = () => {
   const [inputParams, updateInputParams] = useState({
@@ -31,6 +36,8 @@ const Mint = () => {
   const [fileUrl, setFileUrl] = useState<string>("")
   const [uploading, setUploading] = useState<boolean>(false)
   const [uploadingJSON, setUploadingJSON] = useState<boolean>(false)
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const { address: accountAddress, status: accountStatus } = useAccount()
 
@@ -106,6 +113,12 @@ const Mint = () => {
     }
   }
 
+  const handleClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }
+
   const handleOnChangeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target?.files?.[0]
 
@@ -152,111 +165,281 @@ const Mint = () => {
   }
 
   return (
-    <div className="pt-20 text-foreground bg-background">
-      <h1 className="text-3xl font-bold">Create New NFT</h1>
-      <div className="flex flex-col">
-        <div>
-          <input
-            disabled={
+    <section className="relative flex flex-col w-full mx-auto px-4 py-36 scr-1360:max-w-[1360px] scr-1360:mx-auto scr-1360:px-4 scr-1560:px-4 font-sans">
+      <div className="flex flex-col md:flex-row md:gap-[2vw]">
+        <div className="flex flex-col w-full h-full md:max-w-[37.rem]">
+          <h1 className="text-[2rem] font-semibold tracking-tight">
+            Create an NFT
+          </h1>
+          <p className="font-normal">
+            Once your item is minted you will not be able to change any of its
+            information.
+          </p>
+        </div>
+        <div className="flex flex-col w-full h-full md:max-w-[37.rem]"></div>
+      </div>
+      <div className="flex flex-col md:flex-row mt-8 md:gap-[2vw]">
+        <div className="flex flex-col items-center w-full h-full md:max-w-[37.rem]">
+          <div
+            onClick={handleClick}
+            className={`relative flex flex-col items-center justify-center w-full h-full aspect-square max-w-[280px] min-h-[280px] sm:max-w-[400px] sm:min-h-[400px] md:max-w-[600px] md:max-h-[600px] border ${fileUrl || uploading ? "border-solid" : "border-dashed"} hover:border-solid hover:bg-base-hover border-white/30 rounded-radii-lg overflow-hidden ${
               uploading ||
               uploadingJSON ||
               mintPending ||
               mintConfirming ||
               mintConfirmed
-            }
-            type="file"
-            onChange={handleOnChangeFile}
-          />
-          {uploading ? "Uploading ...." : "Uploaded/Nothing to Upload"}
-        </div>
-        <div>
-          Name
-          <input
-            className="text-foreground bg-background"
-            id="nftName"
-            type="text"
-            onChange={(e) =>
-              updateInputParams({ ...inputParams, name: e.target.value })
-            }
-          />
-        </div>
-        <div>
-          Description
-          <textarea
-            className="text-foreground bg-background"
-            id="nftDescription"
-            onChange={(e) =>
-              updateInputParams({ ...inputParams, description: e.target.value })
-            }
-          ></textarea>
-        </div>
-        <div>
-          Price
-          <input
-            className="text-foreground bg-background"
-            id="nftPrice"
-            type="text"
-            onChange={(e) =>
-              updateInputParams({ ...inputParams, price: e.target.value })
-            }
-          />
-        </div>
-        <div>
-          Royalty
-          <input
-            className="text-foreground bg-background"
-            id="nftRoyalty"
-            type="number"
-            onChange={(e) =>
-              updateInputParams({ ...inputParams, royalty: e.target.value })
-            }
-          />
-        </div>
-        {fileUrl && <img className="w-20" src={fileUrl} alt="" />}
-        <div>
-          <button
-            disabled={
-              !inputParams.name ||
-              !inputParams.description ||
-              !inputParams.price ||
-              !inputParams.royalty ||
-              !fileHash ||
-              uploadingJSON ||
-              mintPending ||
-              mintConfirming ||
-              mintConfirmed
-            }
-            type="submit"
-            className={cn(
-              `bg-slate-400`,
-              `${(!inputParams.name || !inputParams.description || !inputParams.price || !inputParams.royalty || !fileHash) && "bg-red-500"}`,
-              `${(uploadingJSON || mintPending) && "bg-blue-300"}`,
-              `${mintConfirming && "bg-gray-600"}`,
-              `${mintConfirmed && "bg-green-400"}`
-            )}
-            onClick={mint}
+                ? ""
+                : "cursor-pointer"
+            }`}
           >
-            {uploadingJSON
-              ? "Uploading metadata"
-              : mintPending
-                ? "Tx pending..."
-                : mintConfirming
-                  ? "Confirming Tx ..."
-                  : mintConfirmed
-                    ? "Minting Confirmed!"
-                    : "Mint NFT!"}
-          </button>
-        </div>
-        {mintHash && <div>Transaction Hash: {mintHash}</div>}
-        {mintConfirming && <div>Waiting for confirmation...</div>}
-        {mintConfirmed && <div>Transaction confirmed.</div>}
-        {mintError && (
-          <div>
-            Error: {(mintError as BaseError).shortMessage || mintError.message}
+            <input
+              ref={fileInputRef}
+              disabled={
+                uploading ||
+                uploadingJSON ||
+                mintPending ||
+                mintConfirming ||
+                mintConfirmed
+              }
+              type="file"
+              accept="image/png, image/jpg, image/jpeg, image/webp, image/gif, audio/mp3"
+              onChange={handleOnChangeFile}
+              className="hidden"
+            />
+            {uploading ? (
+              <Skeleton className="w-full h-full" />
+            ) : fileUrl ? (
+              <Image
+                src={fileUrl}
+                alt={`Uploaded file`}
+                fill={true}
+                sizes="600px"
+                className="object-cover object-center"
+              />
+            ) : (
+              <>
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 32 32"
+                    id="upload"
+                    className="w-10 h-10"
+                  >
+                    <path
+                      fill="none"
+                      stroke="#fff"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 22.05V11A4 4 0 0 1 7 7H25a4 4 0 0 1 4 4V22.05M26 28.9s-10.67 2.27-9.6-14.76"
+                    ></path>
+                    <line
+                      x1="11.07"
+                      x2="16.4"
+                      y1="20.95"
+                      y2="13"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    ></line>
+                    <line
+                      x1="21.73"
+                      x2="16.4"
+                      y1="20.95"
+                      y2="13"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    ></line>
+                  </svg>
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="font-medium">Drag and drop media</span>
+                    <span className="text-sm text-blue font-medium">
+                      Browse files
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center justify-center font-medium text-foreground-muted-dark text-sm">
+                  <span>Image/Audio</span>
+                  <span>PNG, JPG, WEBP, GIF, MP3</span>
+                </div>
+              </>
+            )}
           </div>
-        )}
+        </div>
+        <div className="flex flex-col gap-4 mt-4 md:mt-0 w-full h-full md:max-w-[37.rem]">
+          <div>
+            <h3 className="text-xl font-medium">Name</h3>
+            <div className="mt-2 py-2 px-4 bg-white/5 text-base rounded-radii-xl overflow-hidden hover:bg-white/10">
+              <input
+                autoComplete="off"
+                className="w-full text-foreground bg-transparent p-1 active:border-white/10 focus:outline-none focus:border-none focus:bg-transparent placeholder:text-foreground-muted-dark placeholder:font-medium placehoder:text-sm"
+                id="nftName"
+                type="text"
+                placeholder={`e.g. \"Ethereal Visions\"`}
+                onChange={(e) =>
+                  updateInputParams({ ...inputParams, name: e.target.value })
+                }
+              />
+            </div>
+          </div>
+          <div>
+            <h3 className="text-xl font-medium">Description</h3>
+            <div className="mt-2 py-2 px-4 bg-white/5 text-base rounded-radii-xl overflow-hidden hover:bg-white/10">
+              <input
+                autoComplete="off"
+                className="w-full text-foreground bg-transparent p-1 active:border-white/10 focus:outline-none focus:border-none focus:bg-transparent placeholder:text-foreground-muted-dark placeholder:font-medium placehoder:text-sm"
+                id="nftDescription"
+                type="text"
+                placeholder={`e.g. \"A journey through blending art and technology\"`}
+                onChange={(e) =>
+                  updateInputParams({
+                    ...inputParams,
+                    description: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+          <div>
+            <h3 className="text-xl font-medium">Price</h3>
+            <div className="flex mt-2 py-2 px-4 bg-white/5 text-base rounded-radii-xl overflow-hidden hover:bg-white/10">
+              <input
+                autoComplete="off"
+                className="w-full text-foreground bg-transparent p-1 active:border-white/10 focus:outline-none focus:border-none focus:bg-transparent placeholder:text-foreground-muted-dark placeholder:font-medium placehoder:text-sm"
+                id="nftPrice"
+                type="number"
+                step="any"
+                placeholder={`e.g. \"0.02\"`}
+                onChange={(e) =>
+                  updateInputParams({
+                    ...inputParams,
+                    price: e.target.value,
+                  })
+                }
+              />
+              <div className="grow-0 shrink-0 flex items-center justify-center">
+                <span className="text-foreground-muted ml-2">ETH</span>
+                <span className="ml-1">
+                  <svg
+                    className="fill-foreground-muted-dark"
+                    width="16px"
+                    height="16px"
+                    viewBox="0 0 24 24"
+                    role="img"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Ethereum Icon</title>
+                    <path d="M11.944 17.97L4.58 13.62 11.943 24l7.37-10.38-7.372 4.35h.003zM12.056 0L4.69 12.223l7.365 4.354 7.365-4.35L12.056 0z" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 className="text-xl font-medium">Royalties</h3>
+            <div className="flex mt-2 py-2 px-4 bg-white/5 text-base rounded-radii-xl overflow-hidden hover:bg-white/10">
+              <input
+                autoComplete="off"
+                className="w-full text-foreground bg-transparent p-1 active:border-white/10 focus:outline-none focus:border-none focus:bg-transparent placeholder:text-foreground-muted-dark placeholder:font-medium placehoder:text-sm"
+                id="nftRoyalty"
+                type="number"
+                step="any"
+                placeholder={`e.g. \"20\"`}
+                onChange={(e) =>
+                  updateInputParams({
+                    ...inputParams,
+                    royalty: e.target.value,
+                  })
+                }
+              />
+              <div className="grow-0 shrink-0 flex items-center justify-center">
+                <span className="text-foreground-muted ml-2">%</span>
+              </div>
+            </div>
+            <p className="mt-1 text-foreground-muted-dark font-medium text-sm">
+              Suggested: 0%, 5%, 10%, 20%. Maximum is 25%
+            </p>
+          </div>
+          <div className="flex w-full items-center mt-2">
+            <button
+              disabled={
+                !inputParams.name ||
+                !inputParams.description ||
+                !inputParams.price ||
+                !inputParams.royalty ||
+                !fileHash ||
+                uploadingJSON ||
+                mintPending ||
+                mintConfirming ||
+                mintConfirmed
+              }
+              type="submit"
+              className={cn(
+                `bg-blue text-foreground hover:bg-blue-hover`,
+                `${(!inputParams.name || !inputParams.description || !inputParams.price || !inputParams.royalty || !fileHash) && "bg-blue/50 text-foreground/70 hover:bg-blue/50"}`,
+                `${(uploadingJSON || mintPending) && "bg-white/5 hover:bg-white/5"}`,
+                `${mintConfirming && "bg-white/5 hover:bg-white/5"}`,
+                `${mintConfirmed && "bg-white/5 hover:bg-white/5"}`,
+                "px-4 py-3 rounded-radii-xl font-semibold text-base"
+              )}
+              onClick={mint}
+            >
+              {uploadingJSON
+                ? "Uploading..."
+                : mintPending
+                  ? "Minting..."
+                  : mintConfirming
+                    ? "Confirming..."
+                    : mintConfirmed
+                      ? "Minting Confirmed!"
+                      : "Create"}
+            </button>
+          </div>
+          <div className="flex flex-col text-sm font-medium text-foreground-muted-dark break-words">
+            {mintHash && <div>Transaction Hash: {mintHash}</div>}
+            {mintConfirming && <div>Waiting for confirmation...</div>}
+            {mintConfirmed && (
+              <div className="text-blue">Transaction confirmed.</div>
+            )}
+            {mintError && (
+              <div className="text-red-alt font-medium">
+                Error:{" "}
+                {(mintError as BaseError).shortMessage || mintError.message}
+              </div>
+            )}
+          </div>
+          {mintConfirmed && (
+            <div className="flex items-center text-foreground-muted-dark font-semibold">
+              <span className="">Manage listings in your </span>
+              <Link
+                href="/account"
+                className="flex items-center text-foreground ml-1 fill-none stroke-foreground hover:text-blue hover:stroke-blue"
+              >
+                <span>Profile</span>
+                <svg
+                  width="24px"
+                  height="24px"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  className="mb-[0.5px]"
+                >
+                  <line x1="7" y1="17" x2="17" y2="7"></line>
+                  <polyline points="7 7 17 7 17 17"></polyline>
+                </svg>
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
 

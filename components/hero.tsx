@@ -43,7 +43,7 @@ const Hero = () => {
     <section className="relative flex flex-col max-w-[1560px] w-full mx-auto overflow-hidden border-none">
       <Backdrop backdropUrl={bgImageUrl} className="" />
 
-      <div className="flex flex-col w-full justify-end py-3 px-4 mt-[20rem] md:mt-[23.75rem] scr-1360:max-w-[1360px] scr-1360:mx-auto scr-1360:py-6 scr-1360:px-4 scr-1560:mt-[30rem] scr-1560:py-6 scr-1560:px-0">
+      <div className="flex flex-col w-full justify-end py-3 px-4 mt-[20rem] md:mt-[23.75rem] scr-1360:max-w-[1360px] scr-1360:mx-auto scr-1360:py-6 scr-1360:px-4 scr-1560:mt-[30rem] scr-1560:py-6 scr-1560:px-4">
         <h3 className="text-xl font-semibold font-sans">
           {nftName ? (
             nftName

@@ -73,7 +73,7 @@ const Navbar = () => {
       transition={{ type: "tween", duration: 0.32 }}
       className={`fixed top-0 left-0 w-full h-[4.5rem] py-3 font-mono z-20 ${path === "/" ? "bg-base-alt/60 backdrop-blur-md" : "bg-base-alt"}`}
     >
-      <div className="relative flex justify-between items-center scr-20:gap-32 max-w-[1360px] z-20 w-full h-full mx-auto px-4 scr-1560:px-0">
+      <div className="relative flex justify-between items-center scr-20:gap-32 max-w-[1360px] z-20 w-full h-full mx-auto px-4 scr-1560:px-4">
         <Link
           href="/"
           className="text-[2rem] font-mono font-medium tracking-tighter"

@@ -233,7 +233,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="relative flex flex-col w-full mx-auto px-4 pt-[4.5rem] scr-1360:max-w-[1360px] scr-1360:mx-auto scr-1360:px-4 scr-1560:px-0">
+    <div className="relative flex flex-col w-full mx-auto px-4 pt-[4.5rem] scr-1360:max-w-[1360px] scr-1360:mx-auto scr-1360:px-4 scr-1560:px-4">
       <section className="flex flex-col justify-center pt-[134px] gap-2 font-mono text-base">
         <div className="absolute top-[4.5rem] left-0 bg-elevation w-full h-48 -z-10"></div>
         <Avatar

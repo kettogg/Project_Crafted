@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
 :root {
   --black: 0 0 0;
   --gray: 176 176 176;
@@ -9,9 +21,13 @@
   --white: 255 255 255;
   --blue: 32 130 226;
   --blue-hover: 46 140 238;
+  --red-alt: 230 40 40;
+  --green: 52 199 124;
+  --green-dark: 12 149 78;
 
   --base-main: 16 16 16;
   --base-alt: 18 18 18;
+  --base-hover: 27 27 27;
   --elevation: 32 32 32;
   --elevation-high: 36 36 36;
   --elevation-higher: 46 46 46;
@@ -23,6 +39,7 @@
 
   --radii-sm: 0.2rem;
   --radii-lg: 0.625rem;
+  --radii-xl: 1rem;
   --radii-skeleton: 0.05rem;
 
   --overlay: 16, 16, 16;

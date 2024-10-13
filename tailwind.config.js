@@ -22,6 +22,7 @@ module.exports = {
       borderRadius: {
         "radii-sm": "var(--radii-sm)",
         "radii-lg": "var(--radii-lg)",
+        "radii-xl": "var(--radii-xl)",
         "radii-skeleton": "var(--radii-skeleton)",
       },
       colors: {
@@ -30,9 +31,13 @@ module.exports = {
         white: "rgb(var(--white))",
         blue: "rgb(var(--blue))",
         "blue-hover": "rgb(var(--blue-hover))",
+        "red-alt": "rgb(var(--red-alt))",
+        green: "rgb(var(--green))",
+        "green-dark": "rgb(var(--green-dark))",
 
         "base-main": "rgb(var(--base-main))",
         "base-alt": "rgb(var(--base-alt))",
+        "base-hover": "rgb(var(--base-hover))",
         elevation: "rgb(var(--elevation))",
         "elevation-high": "rgb(var(--elevation-high))",
         "elevation-higher": "rgb(var(--elevation-higher))",
@@ -45,6 +50,8 @@ module.exports = {
       fontFamily: {
         // sans: "var(--font-rg-casual-text)",
         sans: "var(--font-clash-grotesk)",
+        // sans: "var(--font-neue)",
+        // sans: "var(--font-rg-mono)",
         "sans-alt": "var(--font-rg-casual)", // Narrower than Casual Text
         mono: "var(--font-rg-mono)",
         // mono: "var(--font-jetbrains-mono)",
