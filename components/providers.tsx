@@ -28,7 +28,7 @@ const myTheme = merge(midnightTheme(), {
     modalMobile: "0.05rem",
   },
   fonts: {
-    body: "var(--font-rg-casual)",
+    body: "var(--font-neue)",
   },
 } as Theme)
 

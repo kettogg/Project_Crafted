@@ -29,7 +29,7 @@ import ListDialog from "@/components/listdialog"
 import UnlistDialog from "@/components/unlistdialog"
 import { Skeleton } from "@/components/skeleton"
 
-import { MarketItem } from "@/lib/types"
+import { MarketItem, NFTMetadata } from "@/lib/types"
 import Gallery from "@/components/gallery"
 
 const Profile = () => {
@@ -335,37 +335,51 @@ const Profile = () => {
       <section className="flex flex-col justify-center mt-4 gap-2 font-mono text-base">
         <div className="flex flex-col gap-2 ">
           {activeView === "owned" && ownedNFTs && (
-            <Gallery itemsList={ownedNFTs} />
+            <Gallery
+              openListDialog={openListDialog}
+              openUnlistDialog={openUnlistDialog}
+              itemsList={ownedNFTs}
+            />
           )}
           {activeView === "listed" && listedNFTs && (
-            <Gallery itemsList={listedNFTs} />
+            <Gallery
+              openListDialog={openListDialog}
+              openUnlistDialog={openUnlistDialog}
+              itemsList={listedNFTs}
+            />
           )}
           {activeView === "unlisted" && unlistedNFTs && (
-            <Gallery itemsList={unlistedNFTs} />
+            <Gallery
+              openListDialog={openListDialog}
+              openUnlistDialog={openUnlistDialog}
+              itemsList={unlistedNFTs}
+            />
           )}
 
-          <ListDialog
-            dialogRef={listDialogRef}
-            listingPrice={selectedListingPrice}
-            setListingPrice={setSelectedListingPrice}
-            listNFT={listNFT}
-            listPending={listPending}
-            listConfirming={listConfirming}
-            listConfirmed={listConfirmed}
-            listHash={listHash}
-            listError={listError}
-            closeDialog={closeDialog}
-          />
-          <UnlistDialog
-            dialogRef={unlistDialogRef}
-            unlistNFT={unlistNFT}
-            unlistPending={unlistPending}
-            unlistConfirming={unlistConfirming}
-            unlistConfirmed={unlistConfirmed}
-            unlistHash={unlistHash}
-            unlistError={unlistError}
-            closeDialog={closeDialog}
-          />
+          <>
+            <ListDialog
+              dialogRef={listDialogRef}
+              listingPrice={selectedListingPrice}
+              setListingPrice={setSelectedListingPrice}
+              listNFT={listNFT}
+              listPending={listPending}
+              listConfirming={listConfirming}
+              listConfirmed={listConfirmed}
+              listHash={listHash}
+              listError={listError}
+              closeDialog={closeDialog}
+            />
+            <UnlistDialog
+              dialogRef={unlistDialogRef}
+              unlistNFT={unlistNFT}
+              unlistPending={unlistPending}
+              unlistConfirming={unlistConfirming}
+              unlistConfirmed={unlistConfirmed}
+              unlistHash={unlistHash}
+              unlistError={unlistError}
+              closeDialog={closeDialog}
+            />
+          </>
         </div>
       </section>
       <section className="h-[100vh]"></section>

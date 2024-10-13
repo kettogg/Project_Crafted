@@ -4,6 +4,8 @@ import { type BaseError } from "wagmi"
 
 import { cn } from "@/lib/utils"
 
+import { NFTMetadata } from "@/lib/types"
+
 type ListDialogProps = {
   dialogRef: React.RefObject<HTMLDialogElement>
   listingPrice: string

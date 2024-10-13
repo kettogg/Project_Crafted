@@ -11,17 +11,6 @@ import { type ReactNode } from "react"
 import { Providers } from "@/components/providers"
 import Navbar from "@/components/navbar"
 
-// const spaceMono = Space_Mono({
-//   subsets: ["latin"],
-//   variable: "--font-mono",
-//   weight: ["400", "700"],
-// })
-// const spaceGrotesk = Space_Grotesk({
-//   subsets: ["latin"],
-//   variable: "--font-sans",
-//   weight: ["300", "400", "500", "600", "700"],
-// })
-
 const rightGroteskCasualText = localFont({
   src: "../assets/fonts/PPRightGroteskText-CasualVariable.ttf",
   variable: "--font-rg-casual-text",
@@ -42,6 +31,18 @@ const rightGroteskTight = localFont({
   src: "../assets/fonts/PPRightGrotesk-TightVariable.ttf",
   variable: "--font-rg-tight",
 })
+const neueMontreal = localFont({
+  src: "../assets/fonts/PPNeueMontreal-Variable.ttf",
+  variable: "--font-neue",
+})
+const clashGrotesk = localFont({
+  src: "../assets/fonts/ClashGrotesk-Variable.ttf",
+  variable: "--font-clash-grotesk",
+})
+const jetBrainsMono = localFont({
+  src: "../assets/fonts/JetBrainsMono-Variable.ttf",
+  variable: "--font-jetbrains-mono",
+})
 
 export const metadata: Metadata = {
   title: "Crafted",
@@ -53,7 +54,7 @@ export default function RootLayout(props: { children: ReactNode }) {
   return (
     <html lang="en" className="">
       <body
-        className={`${rightGroteskCasualText.variable} ${rightGroteskCasual.variable} ${rightGroteskMono.variable} ${rightGroteskWide.variable} ${rightGroteskTight.variable} min-w-48 bg-background text-foreground`}
+        className={`${rightGroteskCasualText.variable} ${rightGroteskCasual.variable} ${rightGroteskMono.variable} ${rightGroteskWide.variable} ${rightGroteskTight.variable} ${neueMontreal.variable} ${clashGrotesk.variable} ${jetBrainsMono.variable} min-w-48 bg-background text-foreground`}
       >
         <Providers cookie={cookie}>
           <Navbar />

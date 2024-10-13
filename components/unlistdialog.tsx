@@ -4,6 +4,8 @@ import { type BaseError } from "wagmi"
 
 import { cn } from "@/lib/utils"
 
+import { NFTMetadata } from "@/lib/types"
+
 type UnlistDialogProps = {
   dialogRef: React.RefObject<HTMLDialogElement>
   unlistNFT: () => Promise<void>

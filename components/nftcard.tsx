@@ -30,8 +30,12 @@ import { dialog, div } from "framer-motion/client"
 
 const gatewayURL = process.env.NEXT_PUBLIC_GATEWAY_URL as string
 
+import { NFTMetadata } from "@/lib/types"
+
 export type NFTCardProps = {
   nft: MarketItem
+  openListDialog: (tokenId: bigint) => void
+  openUnlistDialog: (tokenId: bigint) => void
 }
 
 const NFTCard = ({
@@ -43,9 +47,12 @@ const NFTCard = ({
     royaltyFeePercent,
     isListed: initialIsListed,
   },
+  openListDialog,
+  openUnlistDialog,
 }: NFTCardProps) => {
   const [fileURL, setFileURL] = useState<string>("")
   const [nftName, setNftName] = useState<string>("")
+  const [nftDesc, setNftDesc] = useState<string>("")
 
   const [isListed, setIsListed] = useState<boolean>(initialIsListed)
 
@@ -87,6 +94,11 @@ const NFTCard = ({
             const nftName = jsonMetaData.name
             setNftName(nftName)
           }
+
+          if (jsonMetaData.description) {
+            const nftDesc = jsonMetaData.description
+            setNftDesc(nftDesc)
+          }
         } catch (error) {
           console.error("Error fetching file URI:", error)
         }
@@ -98,6 +110,10 @@ const NFTCard = ({
 
   const handleMoreBtn = () => {
     setIsMoreOpen((prev) => !prev)
+  }
+
+  const tempHandler = () => {
+    console.log("Hi")
   }
 
   return (
@@ -119,11 +135,11 @@ const NFTCard = ({
             </div>
           </div>
         </div>
-        <div className="grow relative flex flex-col justify-between p-4 font-sans text-foreground tracking-tight">
+        <div className="grow relative flex flex-col justify-between p-4 font-sans text-foreground">
           <div className="flex flex-col">
             <div className="flex justify-between">
               {nftName ? (
-                <span className="text-sm lg:text-base">{`${nftName}`}</span>
+                <span className="text-sm lg:text-base font-semibold">{`${nftName}`}</span>
               ) : (
                 <Skeleton className="w-full h-5 lg:h-6 rounded-radii-skeleton" />
               )}
@@ -147,7 +163,7 @@ const NFTCard = ({
                   <Name
                     address={creator}
                     chain={base}
-                    className="text-sm lg:text-[0.9375rem] leading-5 font-normal text-foreground-muted min-h-6"
+                    className="text-sm lg:text-[0.9375rem] leading-5 font-medium text-foreground-muted min-h-6"
                   />
                   <Badge />
                 </Identity>
@@ -234,7 +250,20 @@ const NFTCard = ({
       <div
         className={`hidden lg:flex absolute ${isMoreOpen ? "bottom-0" : "-bottom-10"} group-hover:bottom-0 transition-all justify-center items-center bg-blue w-full h-9 font-sans`}
       >
-        <button className="grow flex items-center justify-center text-foreground text-sm tracking-tight font-semibold text-center hover:bg-blue-hover h-full">
+        <button
+          onClick={() => {
+            if (isListed) {
+              return accountAddress !== currentOwner
+                ? tempHandler() // Buy NFT
+                : openUnlistDialog(tokenId)
+            } else {
+              return accountAddress === currentOwner
+                ? openListDialog(tokenId)
+                : tempHandler() // View NFT
+            }
+          }}
+          className="grow flex items-center justify-center text-foreground text-sm font-semibold text-center hover:bg-blue-hover h-full"
+        >
           {isListed
             ? accountAddress !== currentOwner
               ? "Buy NFT"
@@ -276,7 +305,20 @@ const NFTCard = ({
           transition={{ duration: 0.2, ease: "easeInOut" }}
           className="absolute flex flex-col items-start rounded-radii-lg bottom-12 right-0 bg-elevation-higher text-foreground font-sans text-sm lg:text-[0.9375rem] p-2 z-50"
         >
-          <button className="p-2 lg:px-4 lg:py-3 hover:bg-white/5 rounded-radii-lg w-full">
+          <button
+            onClick={() => {
+              if (isListed) {
+                return accountAddress !== currentOwner
+                  ? tempHandler() // Buy NFT
+                  : openUnlistDialog(tokenId)
+              } else {
+                return accountAddress === currentOwner
+                  ? openListDialog(tokenId)
+                  : tempHandler() // View NFT
+              }
+            }}
+            className="p-2 lg:px-4 lg:py-3 hover:bg-white/5 rounded-radii-lg w-full"
+          >
             {isListed
               ? accountAddress !== currentOwner
                 ? "Buy NFT"

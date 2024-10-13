@@ -43,9 +43,11 @@ module.exports = {
         "foreground-muted-dark": "rgb(var(--foreground-muted-dark))",
       },
       fontFamily: {
-        sans: "var(--font-rg-casual-text)",
+        // sans: "var(--font-rg-casual-text)",
+        sans: "var(--font-clash-grotesk)",
         "sans-alt": "var(--font-rg-casual)", // Narrower than Casual Text
         mono: "var(--font-rg-mono)",
+        // mono: "var(--font-jetbrains-mono)",
         wide: "var(--font-rg-wide)",
         tight: "var(--font-rg-tight)",
       },

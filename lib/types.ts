@@ -9,4 +9,10 @@ type MarketItem = {
 
 type Address = `0x${string}`
 
-export type { MarketItem, Address }
+type NFTMetadata = {
+  name: string
+  description: string
+  fileUrl: string
+}
+
+export type { MarketItem, Address, NFTMetadata }
