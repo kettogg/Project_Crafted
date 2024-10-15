@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
 
 import React, { useState, useEffect } from "react"
 
@@ -34,8 +35,8 @@ import { NFTMetadata } from "@/lib/types"
 
 export type NFTCardProps = {
   nft: MarketItem
-  openListDialog: (tokenId: bigint) => void
-  openUnlistDialog: (tokenId: bigint) => void
+  openListDialog?: (tokenId: bigint) => void
+  openUnlistDialog?: (tokenId: bigint) => void
 }
 
 const NFTCard = ({
@@ -50,6 +51,9 @@ const NFTCard = ({
   openListDialog,
   openUnlistDialog,
 }: NFTCardProps) => {
+  const pathname = usePathname()
+  const router = useRouter()
+
   const [fileURL, setFileURL] = useState<string>("")
   const [nftName, setNftName] = useState<string>("")
   const [nftDesc, setNftDesc] = useState<string>("")
@@ -61,6 +65,8 @@ const NFTCard = ({
   const [isMoreOpen, setIsMoreOpen] = useState(false)
 
   const { address: accountAddress } = useAccount()
+
+  const isAccountPage = pathname === "/account"
 
   // READ - Get token URI and use it to get the file URL (image/gif/audio)
   const { data: tokenURIData, status: tokenURIStatus } = useReadContract({
@@ -112,13 +118,22 @@ const NFTCard = ({
     setIsMoreOpen((prev) => !prev)
   }
 
-  const tempHandler = () => {
-    console.log("Hi")
+  const redirectToAccountPage = () => {
+    console.log("Account")
+    router.push(`/account`)
+  }
+
+  const redirectToTokenPage = () => {
+    console.log("Token")
+    router.push(`/assets/ethereum/${tokenId}`)
   }
 
   return (
     <article className="group relative flex flex-col rounded-radii-lg bg-elevation hover:bg-elevation-high card-shadow z-[2] overflow-hidden">
-      <div className="relative cursor-pointer flex flex-col h-full">
+      <div
+        onClick={redirectToTokenPage}
+        className="relative cursor-pointer flex flex-col h-full"
+      >
         <div className="pb-[100%] relative overflow-hidden">
           <div className="absolute inset-0">
             <div className="relative flex flex-col h-full justify-center group-hover:scale-110 transition-transform duration-[400ms]">
@@ -254,12 +269,16 @@ const NFTCard = ({
           onClick={() => {
             if (isListed) {
               return accountAddress !== currentOwner
-                ? tempHandler() // Buy NFT
-                : openUnlistDialog(tokenId)
+                ? redirectToTokenPage() // Buy NFT
+                : isAccountPage
+                  ? openUnlistDialog && openUnlistDialog(tokenId)
+                  : redirectToAccountPage()
             } else {
               return accountAddress === currentOwner
-                ? openListDialog(tokenId)
-                : tempHandler() // View NFT
+                ? isAccountPage
+                  ? openListDialog && openListDialog(tokenId)
+                  : redirectToAccountPage()
+                : redirectToTokenPage() // View NFT
             }
           }}
           className="grow flex items-center justify-center text-foreground text-sm font-semibold text-center hover:bg-blue-hover h-full"
@@ -309,15 +328,19 @@ const NFTCard = ({
             onClick={() => {
               if (isListed) {
                 return accountAddress !== currentOwner
-                  ? tempHandler() // Buy NFT
-                  : openUnlistDialog(tokenId)
+                  ? redirectToTokenPage() // Buy NFT
+                  : isAccountPage
+                    ? openUnlistDialog && openUnlistDialog(tokenId)
+                    : redirectToAccountPage()
               } else {
                 return accountAddress === currentOwner
-                  ? openListDialog(tokenId)
-                  : tempHandler() // View NFT
+                  ? isAccountPage
+                    ? openListDialog && openListDialog(tokenId)
+                    : redirectToAccountPage()
+                  : redirectToTokenPage() // View NFT
               }
             }}
-            className="p-2 lg:px-4 lg:py-3 hover:bg-white/5 rounded-radii-lg w-full"
+            className="p-2 lg:px-4 lg:py-3 hover:bg-white/5 rounded-radii-lg w-full text-sm lg:text-[0.9375rem]"
           >
             {isListed
               ? accountAddress !== currentOwner

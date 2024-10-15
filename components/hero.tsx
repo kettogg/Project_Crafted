@@ -1,5 +1,7 @@
 "use client"
 
+import { useRouter } from "next/navigation"
+
 import React, { useState, useEffect } from "react"
 
 import { motion } from "framer-motion"
@@ -19,6 +21,8 @@ import IdentityWrapper from "./identity"
 import { Skeleton } from "./skeleton"
 
 const Hero = () => {
+  const router = useRouter()
+
   const [bgImageUrl, setBgImageUrl] = useState<string>("")
   const [selectedCard, setSelectedCard] = useState<bigint>(featuredTokenIds[0])
   const [hoveredCard, setHoveredCard] = useState<bigint | null>(null)
@@ -37,6 +41,10 @@ const Hero = () => {
 
   const handleCardHoverEnd = () => {
     setHoveredCard(null)
+  }
+
+  const redirectToTokenPage = () => {
+    router.push(`/assets/ethereum/${selectedCard.toString()}`)
   }
 
   return (
@@ -97,8 +105,11 @@ const Hero = () => {
             </div>
           </div>
 
-          <button className="bg-black/40 backdrop-blur-md border border-white/10 flex items-center rounded-radii-sm text-sm font-sans font-medium px-3 py-2 group hover:bg-foreground hover:text-black transition-colors duration-200">
-            <span>VIEW</span>
+          <button
+            onClick={redirectToTokenPage}
+            className="bg-black/40 backdrop-blur-md border border-white/10 flex items-center rounded-radii-sm text-sm font-sans font-semibold px-3 py-2 group hover:bg-foreground hover:text-black transition-colors duration-200"
+          >
+            <span>View</span>
             <span className="hidden md:inline md:ml-[0.35rem]">NFT</span>
             <svg
               className="fill-foreground group-hover:fill-background transition-colors duration-200 ml-1"

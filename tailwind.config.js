@@ -29,6 +29,7 @@ module.exports = {
         black: "rgb(var(--black))",
         gray: "rgb(var(--gray))",
         white: "rgb(var(--white))",
+        "blue-light": "rgb(var(--blue-light))",
         blue: "rgb(var(--blue))",
         "blue-hover": "rgb(var(--blue-hover))",
         "red-alt": "rgb(var(--red-alt))",
@@ -37,7 +38,7 @@ module.exports = {
 
         "base-main": "rgb(var(--base-main))",
         "base-alt": "rgb(var(--base-alt))",
-        "base-hover": "rgb(var(--base-hover))",
+        "base-light": "rgb(var(--base-light))",
         elevation: "rgb(var(--elevation))",
         "elevation-high": "rgb(var(--elevation-high))",
         "elevation-higher": "rgb(var(--elevation-higher))",

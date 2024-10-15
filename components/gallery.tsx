@@ -4,8 +4,8 @@ import { MarketItem, NFTMetadata } from "@/lib/types"
 
 type GalleryProps = {
   itemsList: MarketItem[]
-  openListDialog: (tokenId: bigint) => void
-  openUnlistDialog: (tokenId: bigint) => void
+  openListDialog?: (tokenId: bigint) => void
+  openUnlistDialog?: (tokenId: bigint) => void
 }
 
 const Gallery = ({

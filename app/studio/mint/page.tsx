@@ -165,7 +165,7 @@ const Mint = () => {
   }
 
   return (
-    <section className="relative flex flex-col w-full mx-auto px-4 py-36 scr-1360:max-w-[1360px] scr-1360:mx-auto scr-1360:px-4 scr-1560:px-4 font-sans">
+    <section className="relative flex flex-col w-full mx-auto px-4 py-32 scr-1360:max-w-[1360px] scr-1360:mx-auto scr-1360:px-4 scr-1560:px-4 font-sans">
       <div className="flex flex-col md:flex-row md:gap-[2vw]">
         <div className="flex flex-col w-full h-full md:max-w-[37.rem]">
           <h1 className="text-[2rem] font-semibold tracking-tight">
@@ -182,7 +182,7 @@ const Mint = () => {
         <div className="flex flex-col items-center w-full h-full md:max-w-[37.rem]">
           <div
             onClick={handleClick}
-            className={`relative flex flex-col items-center justify-center w-full h-full aspect-square max-w-[280px] min-h-[280px] sm:max-w-[400px] sm:min-h-[400px] md:max-w-[600px] md:max-h-[600px] border ${fileUrl || uploading ? "border-solid" : "border-dashed"} hover:border-solid hover:bg-base-hover border-white/30 rounded-radii-lg overflow-hidden ${
+            className={`relative flex flex-col items-center justify-center w-full h-full aspect-square max-w-[280px] min-h-[280px] sm:max-w-[400px] sm:min-h-[400px] md:max-w-[600px] md:max-h-[600px] border ${fileUrl || uploading ? "border-solid" : "border-dashed"} hover:border-solid hover:bg-white/[0.04] border-white/30 rounded-radii-lg overflow-hidden ${
               uploading ||
               uploadingJSON ||
               mintPending ||

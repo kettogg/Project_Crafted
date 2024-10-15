@@ -19,6 +19,7 @@
   --gray: 176 176 176;
   --gray-dark: 144 144 144;
   --white: 255 255 255;
+  --blue-light: 142 199 255;
   --blue: 32 130 226;
   --blue-hover: 46 140 238;
   --red-alt: 230 40 40;
@@ -27,7 +28,7 @@
 
   --base-main: 16 16 16;
   --base-alt: 18 18 18;
-  --base-hover: 27 27 27;
+  --base-light: 27 27 27;
   --elevation: 32 32 32;
   --elevation-high: 36 36 36;
   --elevation-higher: 46 46 46;
@@ -37,10 +38,13 @@
   --foreground-muted: var(--gray);
   --foreground-muted-dark: var(--gray-dark);
 
-  --radii-sm: 0.2rem;
+  /* --radii-sm: 0.2rem;
   --radii-lg: 0.625rem;
+  --radii-xl: 1rem; */
+  --radii-sm: 0.75rem;
+  --radii-lg: 0.85rem;
   --radii-xl: 1rem;
-  --radii-skeleton: 0.05rem;
+  --radii-skeleton: 0.75rem;
 
   --overlay: 16, 16, 16;
   --scrollbar-bg: var(--elevation-higher);
